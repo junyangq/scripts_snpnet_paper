@@ -5,7 +5,7 @@ GBE_ID=$1
 
 out_dir="/oak/stanford/groups/mrivas/projects/biobank-methods-dev/snpnet-PRScs/PRScs/${GBE_ID}"
 
-ml load snpnet_yt
+# PRScs.py is also provided in the PRScs repo (https://github.com/getian107/PRScs)
 
 python /oak/stanford/groups/mrivas/users/ytanigaw/repos/getian107/PRScs/PRScs.py \
 --ref_dir=/oak/stanford/groups/mrivas/software/PRS-CS/ldblk_1kg_eur \

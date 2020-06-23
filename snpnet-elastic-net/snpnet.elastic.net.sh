@@ -118,14 +118,12 @@ status_col="CoxStatus"
 ############################################################
 # Configure other parameters
 ############################################################
-# ml load snpnet_yt/dev
-ml load snpnet_yt/0.3.9
 
-# Two variables (${snpnet_dir} and ${snpnet_wrapper}) should be already configured by Sherlock module
-# https://github.com/rivas-lab/sherlock-modules/tree/master/snpnet
-# Or, you may use the latest versions
-#  snpnet_dir="$OAK/users/$USER/repos/rivas-lab/snpnet"
-#  snpnet_wrapper="$OAK/users/$USER/repos/rivas-lab/PRS/helper/snpnet_wrapper.sh"
+# ${snpnet_wrapper} is the path to the wrapper script. An example file
+# is provided in the snpnet package under the helpers subdirectory.
+#
+# You may find description of the options in the script. For example,
+# ${snpnet_dir} specifies the directory of the snpnet package.
 
 ############################################################
 # Run ${snpnet_wrapper} script
