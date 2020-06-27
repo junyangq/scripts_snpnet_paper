@@ -5,11 +5,47 @@ In this directory, we have scripts used to apply elastic net using `snpnet`.
 ## elastic net with `snpnet`
 
 - [`input_phe_file_prep.ipynb`](input_phe_file_prep.ipynb): this file was used to prepare the input phenotype file
-- [`snpnet.elastic.net.sh`](snpnet.elastic.net.sh): this script was used to call `snpnet`.
+- [`snpnet.elastic.net.sh`](snpnet.elastic.net.sh): this script was used to call [the helper script](https://github.com/rivas-lab/snpnet/blob/master/helpers/snpnet_wrapper.sh) in the `snpnet` repository.
 
-### usage of the helper script
+### usage of `snpnet.elastic.net.sh`
 
-The usage of the wrapper script is:
+Because this script uses a helper script in the `snpnet` repository, please first clone the repository in your directory.
+
+```{bash}
+cd $HOME # please feel free to change to your favorite directory
+git clone git@github.com:rivas-lab/snpnet.git
+```
+
+After cloning the repositiry in your file system, please note the location of the cloned repository.
+
+Please open [`snpnet.elastic.net.sh`](snpnet.elastic.net.sh) and configure the location of the input files as well as some parameters.
+The parameters specified here will be used to call [the helper script](https://github.com/rivas-lab/snpnet/blob/master/helpers/snpnet_wrapper.sh).
+
+```{bash}
+############################################################
+# Let's configure the required and optional arguments for ${snpnet_wrapper} script
+############################################################
+
+snpnet_dir="$HOME/snpnet" # please specify the path to the cloned snpnet repository
+snpnet_wrapper="${snpnet_dir}/helpers/snpnet_wrapper.sh"
+genotype_pfile="/scratch/groups/mrivas/ukbb24983/cal/pgen/ukb24983_cal_cALL_v2_hg19"
+project_dir="/scratch/groups/mrivas/projects/biobank-methods-dev/snpnet-elastic-net"
+phe_file="${project_dir}/phenotype.phe"
+covariates="age,sex,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10"
+split_col="split"
+```
+
+- `snpnet_dir`: the location of the cloned `snpnet` repository.
+- `snpnet_wrapper`: the location of [the helper script](https://github.com/rivas-lab/snpnet/blob/master/helpers/snpnet_wrapper.sh). In most applications, you don't need to update this as long as `snpnet_dir` is properly configured.
+- `genotype_pfile`: the location of genotype dataset in PLINK2 format. We assume there are three files (`${genotype_pfile}.pgen`, `${genotype_pfile}.psam`, and `${genotype_pfile}.pvar.zst`).
+- `project_dir`: the root directory of the output files.
+- `phe_file`: the location of the phenotype file. An example R script to prepare the input phenotype dataset is provided as [`input_phe_file_prep.ipynb`](input_phe_file_prep.ipynb) in this directory. Please also look at the sample synthetic dataset in the snpnet repository.
+- `covariates`: list of covariates separated with `,` symbol. In this example, we specified age, sex, and the first 10 (genetic) principal components (PCs).
+- `split_col`: the name of the column in the input phenotype file that specifies the partition of individuals into training (`train`) and validation (`val`) sets. This column can have other strings (such as `test` for test set), but `snpnet` will focus on individuals tagged as `train` and `val` and ignore the other individuals.
+
+Now, you have successfully configured the variables to execute `snpnet.elastic.net.sh`.
+
+This script takes 3 command-line arguments.
 
 ```{bash}
 snpnet.elastic.net.sh <phenotype name> <family> <alpha value in elastic net>
@@ -23,6 +59,9 @@ snpnet.elastic.net.sh INI50 gaussian 0.9
 
 ## performance evaluation
 
+To evaluate the performance of the elastic-net models, we computed r2 or AUC values using a notebook and saved the results into a tsv file.
+
+- [`snpnet-elastic-net.eval.ipynb`](snpnet-elastic-net.eval.ipynb): this notebook was used to generate the table above.
 - [`snpnet-elastic-net.eval.tsv`](snpnet-elastic-net.eval.tsv): this table has the evaluated performance.
   - `GBE_ID`: the phenotype ID in Global Biobank Engine
   - `alpha`: the value of the alpha parameter in elastic net
@@ -31,51 +70,7 @@ snpnet.elastic.net.sh INI50 gaussian 0.9
   - `covar`: the r2 or AUC of the risk score computed only with the covariates.
   - `geno_covar`: : the r2 or AUC of the risk score computed with both the genetic variants and covariates.
   - `split`: this column indicate which of the train/val/test set was used for the evaluation.
-- [`snpnet-elastic-net.eval.ipynb`](snpnet-elastic-net.eval.ipynb): this notebook was used to generate the table above.
 
 ## file location
 
-- `/oak/stanford/groups/mrivas/projects/biobank-methods-dev/snpnet-elastic-net`
-
-### phenotype
-
-- `/oak/stanford/groups/mrivas/projects/biobank-methods-dev/snpnet-elastic-net/phenotype.phe`
-
-#### phenotype source files
-
-The original file used in the snpnet v1 analysis was the followings:
-
-- Standing height
-  - `/oak/stanford/groups/mrivas/ukbb24983/phenotypedata/ukb9797_20170818_qt/INI50.phe`
-- BMI
-  - `/oak/stanford/groups/mrivas/ukbb24983/phenotypedata/ukb9797_20170818_qt/INI21001.phe`
-
-Those files are already archived.
-
-```{bash}
-cd /oak/stanford/groups/mrivas/projects/biobank-methods-dev/snpnet-elastic-net
-
-tar -I pigz -xvf /oak/stanford/groups/mrivas/ukbb24983/phenotypedata/phenotypedata_old.tar.gz old/ukb9797_20170818_qt/INI50.phe old/ukb9797_20170818_qt/INI21001.phe
-```
-
-- INI50: Standing height
-  - `/oak/stanford/groups/mrivas/projects/biobank-methods-dev/snpnet-elastic-net/INI50.phe`
-- INI21001: BMI
-  - `/oak/stanford/groups/mrivas/projects/biobank-methods-dev/snpnet-elastic-net/INI21001.phe`
-- HC382: asthma
-  - `/oak/stanford/groups/mrivas/ukbb24983/phenotypedata/extras/highconfidenceqc/v1_2017/phe/HC382.phe`
-- HC269: high_cholesterol
-  - `/oak/stanford/groups/mrivas/ukbb24983/phenotypedata/extras/highconfidenceqc/v1_2017/phe/HC269.phe`
-
-### covariates
-
-- `/oak/stanford/groups/mrivas/ukbb24983/sqc/population_stratification_w24983_20190809/ukb24983_GWAS_covar.20190809.phe`
-- age, sex, PC1-PC10
-
-### split
-
-`/oak/stanford/groups/mrivas/users/ytanigaw/repos/rivas-lab/biobank-methods-dev/private_data/data-split/train.fam`
-
-### genotype data
-
-`/oak/stanford/groups/mrivas/ukbb24983/cal/pgen/ukb24983_cal_cALL_v2_hg19.{pgen,psam,pvar.zst}`
+- [`README_filelocations.md`](README_filelocations.md): this document contains the list of file locations used in the analysis.

@@ -30,5 +30,9 @@ seq 143 | while read idx ; do get_ldm_file $idx ; done > ${mldmlist}
 
 echo "merging ldm in: ${mldmlist}"
 
-ml load gctb
+# ml load gctb
+
+# We installed GCTB (a tool for Genome-wide Complex Trait Bayesian analysis) software as a software module in our HPC system.
+# This `ml load gctb` updates the PATHs so that we can execute gctb software.
+
 gctb --mldm ${mldmlist} --make-sparse-ldm --out ${out} 2>&1 | tee ${out}.log

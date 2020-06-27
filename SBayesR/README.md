@@ -13,6 +13,8 @@ We have two sets of results with and without this option.
 
 ## scripts
 
+In some analysis scripts, we call `gctb`. Please install [GCTB (a tool for Genome-wide Complex Trait Bayesian analysis)](https://cnsgenomics.com/software/gctb/#Overview) from their website to replicate those analysis.
+
 - [`1_split_bfile_by_chr.sh`](1_split_bfile_by_chr.sh)
 - [`2_bfile_nvars_cnt.sh`](2_bfile_nvars_cnt.sh)
   - [`2_bfile_nvars.tsv`](2_bfile_nvars.tsv)

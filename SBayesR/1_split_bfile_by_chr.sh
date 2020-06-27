@@ -1,7 +1,10 @@
 #!/bin/bash
 set -beEuo pipefail
 
-ml load plink2/20200409
+# ml load plink2/20200409
+
+# We installed PLINK2 software as a software module in our HPC system.
+# This `ml load plink2/20200409` updates the PATHs so that we can execute plink2 software.
 
 for chr in $(seq 1 22) ; do
 

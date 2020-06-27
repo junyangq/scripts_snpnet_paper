@@ -15,6 +15,8 @@ We have the performance evaluation results for the 4 phenotypes.
 
 ## scripts
 
+In some scripts, we use [PLINK2](https://www.cog-genomics.org/plink/2.0/) to prepare the genotype dataset. Please install it to replicate our analysis.
+
 - [`1_bfile_prep.sh`](1_bfile_prep.sh)
   - MAF 0.1% threshold (as in the snpnet paper)
   - [`1_bfile_prep_autosomes.sh`](1_bfile_prep_autosomes.sh): the autosome-only plink bfile

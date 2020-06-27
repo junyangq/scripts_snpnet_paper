@@ -22,7 +22,11 @@ fi
 
 echo "$chr ${snp_s}-${snp_e}"
 
-ml load gctb
+# ml load gctb
+
+# We installed GCTB (a tool for Genome-wide Complex Trait Bayesian analysis) software as a software module in our HPC system.
+# This `ml load gctb` updates the PATHs so that we can execute gctb software.
+
 gctb \
 --bfile /scratch/groups/mrivas/projects/biobank-methods-dev/snpnet-SBayesR/bfile/ukb24983_cal_c${chr}_v2_hg19_train_val \
 --make-sparse-ldm \

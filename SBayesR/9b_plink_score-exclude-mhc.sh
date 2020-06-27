@@ -7,7 +7,10 @@ data_dir="/oak/stanford/groups/mrivas/projects/biobank-methods-dev/snpnet-SBayes
 
 betas="${data_dir}/${GBE_ID}.snpRes.plink.tsv"
 
-ml load plink2/20200409
+# ml load plink2/20200409
+
+# We installed PLINK2 software as a software module in our HPC system.
+# This `ml load plink2/20200409` updates the PATHs so that we can execute plink2 software.
 
 cat ${betas} \
 | awk -v FS='\t' '(NR>1){print $3}' \

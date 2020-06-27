@@ -3,7 +3,11 @@ set -beEuo pipefail
 
 GBE_ID=$1
 
-ml load gctb
+# ml load gctb
+
+# We installed GCTB (a tool for Genome-wide Complex Trait Bayesian analysis) software as a software module in our HPC system.
+# This `ml load gctb` updates the PATHs so that we can execute gctb software.
+
 
 gctb --sbayes R \
      --ldm /oak/stanford/groups/mrivas/projects/biobank-methods-dev/snpnet-SBayesR/ukb24983_cal_cAUTO.train_val.ldm.sparse \

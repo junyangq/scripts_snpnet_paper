@@ -5,7 +5,19 @@ SRCNAME=$(readlink -f $0)
 SRCDIR=$(dirname ${SRCNAME})
 PROGNAME=$(basename $SRCNAME)
 VERSION="0.0.1"
-NUM_POS_ARGS="0"
+NUM_POS_ARGS="3"
+
+############################################################
+# Let's configure the required and optional arguments for ${snpnet_wrapper} script
+############################################################
+
+snpnet_dir="$HOME/snpnet" # please specify the path to the cloned snpnet repository
+snpnet_wrapper="${snpnet_dir}/helpers/snpnet_wrapper.sh"
+genotype_pfile="/scratch/groups/mrivas/ukbb24983/cal/pgen/ukb24983_cal_cALL_v2_hg19"
+project_dir="/scratch/groups/mrivas/projects/biobank-methods-dev/snpnet-elastic-net"
+phe_file="${project_dir}/phenotype.phe"
+covariates="age,sex,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10"
+split_col="split"
 
 ############################################################
 # functions
@@ -38,16 +50,6 @@ cat <<- EOF
 EOF
     show_default | awk -v spacer="  " '{print spacer $0}'
 }
-
-############################################################
-# tmp dir
-############################################################
-tmp_dir_root="$LOCAL_SCRATCH"
-if [ ! -d ${tmp_dir_root} ] ; then mkdir -p $tmp_dir_root ; fi
-tmp_dir="$(mktemp -p ${tmp_dir_root} -d tmp-$(basename $0)-$(date +%Y%m%d-%H%M%S)-XXXXXXXXXX)"
-# echo "tmp_dir = $tmp_dir" >&2
-handler_exit () { rm -rf $tmp_dir ; }
-trap handler_exit EXIT
 
 ############################################################
 # parser start
@@ -94,44 +96,21 @@ fi
 phenotype_name=${params[0]}
 family=${params[1]}
 alpha=${params[2]}
+
+############################################################
+# Show the specified parameters
 ############################################################
 
 echo "[job] cpus:${cpus} mem:${mem}"
 echo ${params[@]}
 
 ############################################################
-# Required arguments for ${snpnet_wrapper} script
-############################################################
-genotype_pfile="/scratch/groups/mrivas/ukbb24983/cal/pgen/ukb24983_cal_cALL_v2_hg19"
-project_dir="/scratch/groups/mrivas/projects/biobank-methods-dev/snpnet-elastic-net"
-results_dir="${project_dir}/${phenotype_name}_${alpha}"
-phe_file="${project_dir}/phenotype.phe"
-
-############################################################
-# Additional optional arguments for ${snpnet_wrapper} script
-############################################################
-covariates="age,sex,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10"
-split_col="split"
-status_col="CoxStatus"
-
-############################################################
-# Configure other parameters
-############################################################
-
-# ${snpnet_wrapper} is the path to the wrapper script. An example file
-# is provided in the snpnet package under the helpers subdirectory.
-#
-# You may find description of the options in the script. For example,
-# ${snpnet_dir} specifies the directory of the snpnet package.
-#
-# please also check the ${snpnet_wrapper} script in the snpnet repository
-# https://github.com/rivas-lab/snpnet/blob/master/helpers/snpnet_wrapper.sh
-
-############################################################
 # Run ${snpnet_wrapper} script
 ############################################################
 
 echo "[$0 $(date +%Y%m%d-%H%M%S)] [start] hostname = $(hostname) SLURM_JOBID = ${SLURM_JOBID:=0}; phenotype = ${phenotype_name}" >&2
+
+results_dir="${project_dir}/${phenotype_name}_${alpha}"
 
 if [ ! -d ${results_dir} ] ; then mkdir -p ${results_dir} ; fi
 
@@ -142,7 +121,6 @@ if [ ! -f ${results_dir}/snpnet.RData ] ; then
     --alpha ${alpha} \
     --covariates ${covariates} \
     --split_col ${split_col} \
-    --status_col ${status_col} \
     --verbose \
     --save_computeProduct \
     --glmnetPlus \
