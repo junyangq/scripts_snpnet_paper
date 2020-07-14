@@ -2,12 +2,12 @@
 
 In this directory, we have scripts used to apply elastic net using `snpnet`.
 
-## elastic net with `snpnet`
+## Elastic net with `snpnet`
 
-- [`input_phe_file_prep.ipynb`](input_phe_file_prep.ipynb): this file was used to prepare the input phenotype file
+- [`input_phe_file_prep.ipynb`](input_phe_file_prep.ipynb): this file was used to prepare the input phenotype file.
 - [`snpnet.elastic.net.sh`](snpnet.elastic.net.sh): this script was used to call [the helper script](https://github.com/rivas-lab/snpnet/blob/master/helpers/snpnet_wrapper.sh) in the `snpnet` repository.
 
-### usage of `snpnet.elastic.net.sh`
+### Usage of `snpnet.elastic.net.sh`
 
 Because this script uses a helper script in the `snpnet` repository, please first clone the repository in your directory.
 
@@ -57,20 +57,20 @@ For example, we called the following to run elastic net with `alpha=0.9` for sta
 snpnet.elastic.net.sh INI50 gaussian 0.9
 ```
 
-## performance evaluation
+## Performance evaluation
 
-To evaluate the performance of the elastic-net models, we computed r2 or AUC values using a notebook and saved the results into a tsv file.
+To evaluate the performance of the elastic-net models, we computed r2 (for continuous phenotypes) or AUC (for binary phenotypes) values using a notebook and saved the results into a tsv file.
 
 - [`snpnet-elastic-net.eval.ipynb`](snpnet-elastic-net.eval.ipynb): this notebook was used to generate the table above.
 - [`snpnet-elastic-net.eval.tsv`](snpnet-elastic-net.eval.tsv): this table has the evaluated performance.
-  - `GBE_ID`: the phenotype ID in Global Biobank Engine
-  - `alpha`: the value of the alpha parameter in elastic net
-  - `n_variables`: the number of genetic variants (this does NOT include the number of covariates) in the model
+  - `GBE_ID`: the phenotype ID in Global Biobank Engine.
+  - `alpha`: the value of the alpha parameter in elastic net.
+  - `n_variables`: the number of genetic variants (this does NOT include the number of covariates) in the model.
   - `geno`: the r2 or AUC of the risk score computed only with the genetic variants.
   - `covar`: the r2 or AUC of the risk score computed only with the covariates.
   - `geno_covar`: : the r2 or AUC of the risk score computed with both the genetic variants and covariates.
   - `split`: this column indicate which of the train/val/test set was used for the evaluation.
 
-## file location
+## File location
 
 - [`README_filelocations.md`](README_filelocations.md): this document contains the list of file locations used in the analysis.
